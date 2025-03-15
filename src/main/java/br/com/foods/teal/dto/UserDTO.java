@@ -1,0 +1,50 @@
+package br.com.foods.teal.dto;
+
+import br.com.foods.teal.model.User;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+/**
+ *  Classe para informações do usuário
+ * 
+ * @param id
+ *         identificador do usuário
+ *        
+ * @param name
+ *         nome do usuário
+ *        
+ * @param email
+ *         email do usuário
+ *         
+ * @param phone
+ *         telefone do usuário
+ *         
+ * @param cpf
+ *         cpf do usuário  
+ *         
+ * @author Caio Pereira Leal
+ */
+public record UserDTO(
+		@NotNull(message = "O campo id é obrigatório") Long id, 
+		@NotBlank(message = "O campo nome é obrigatório") String name, 
+		@NotBlank(message = "O campo email é obrigatório") String email, 
+		@NotBlank(message = "O campo telefone é obrigatório") String phone, 
+		@NotBlank(message = "O campo cpf é obrigatório") String cpf) {
+
+	
+	/**
+	 * Retorna uma instância preenchida de usuário
+	 * 
+	 * @param user
+	 *         Classe usuário
+	 *         
+	 * @return novo UserDTO
+	 */
+	public static final UserDTO formModel(User user) {
+		return new UserDTO( user.getId(), 
+						 user.getName(), 
+						 user.getEmail(), 
+						 user.getPhone(), 
+						 user.getCpf() );
+	}
+}

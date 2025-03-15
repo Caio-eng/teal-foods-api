@@ -13,15 +13,24 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class SecurityConfig {
 
-    @Bean
+    @SuppressWarnings("removal")
+	@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()); 
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/h2-console/**").permitAll()  // Permite o acesso ao H2 Console
+                .anyRequest().permitAll())  // Permite todas as outras requisições
+            .headers(headers -> 
+                headers
+                    .frameOptions().sameOrigin()  // Permite a utilização do H2 Console dentro de um iframe
+                    .disable()  // Desabilita a proteção de frame, necessário para o H2
+            );
 
         return http.build();
     }
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
