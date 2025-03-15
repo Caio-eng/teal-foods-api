@@ -20,7 +20,7 @@ public class User implements Serializable {
 
 	@Id
 	@Column(name = "id", nullable = false)
-	private Long id;
+	private String id;
 
 	@Column(name = "name", length = 50)
 	private String name;
@@ -58,7 +58,7 @@ public class User implements Serializable {
 	 * @param cpf
 	 *         cpf do usuário
 	 */
-	public User(Long id, String name, String email, String phone, String cpf) {
+	public User(String id, String name, String email, String phone, String cpf) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -85,7 +85,7 @@ public class User implements Serializable {
 	 * 
 	 * @return o id
 	 */
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -95,7 +95,7 @@ public class User implements Serializable {
 	 * @param id
 	 *         identificador do usuário
 	 */
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

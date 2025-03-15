@@ -52,7 +52,7 @@ public class UserController {
 	 * @return usuário
 	 */
 	@GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         return ResponseEntity.ok(service.findUserById(id));
     }
 	
@@ -89,7 +89,7 @@ public class UserController {
 	 */
 	@PutMapping("/{id}")
 	@Transactional
-    public ResponseEntity<UserDTO> updateUser(@Valid @PathVariable Long id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@Valid @PathVariable String id, @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok( service.update(id, userDTO) );
     }
 	
@@ -101,7 +101,7 @@ public class UserController {
 	 */
 	@DeleteMapping("/{id}")
 	@Transactional
-    public ResponseEntity<Void> deleteUser(@Valid @PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@Valid @PathVariable String id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

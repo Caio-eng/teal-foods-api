@@ -42,7 +42,7 @@ public class UserService {
     * 
     * @return usuário encontrado ou null se não encontrado
     */
-	public UserDTO findUserById(Long id) {
+	public UserDTO findUserById(String id) {
 	    User user = repository.findById(id)
 	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
@@ -72,7 +72,7 @@ public class UserService {
 	 *           
 	 * @return usuário atualizado
 	 */
-	public UserDTO update(Long id, UserDTO userDTO) {
+	public UserDTO update(String id, UserDTO userDTO) {
 	    User user = repository.findById(id)
 	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 	    user = new User( userDTO );
@@ -86,7 +86,7 @@ public class UserService {
 	 * @param id
 	 *         identificador do usuário
 	 */
-	public void delete(Long id) {
+	public void delete(String id) {
 	    User user = repository.findById(id)
 	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 

@@ -9,6 +9,6 @@ import br.com.foods.teal.model.User;
  * 
  * @author Caio Pereira Leal
  */
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, String> {
 
 }

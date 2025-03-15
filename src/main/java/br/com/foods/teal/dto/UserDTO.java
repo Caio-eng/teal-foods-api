@@ -2,7 +2,6 @@ package br.com.foods.teal.dto;
 
 import br.com.foods.teal.model.User;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 /**
  *  Classe para informações do usuário
@@ -25,7 +24,7 @@ import jakarta.validation.constraints.NotNull;
  * @author Caio Pereira Leal
  */
 public record UserDTO(
-		@NotNull(message = "O campo id é obrigatório") Long id, 
+		@NotBlank(message = "O campo id é obrigatório") String id, 
 		@NotBlank(message = "O campo nome é obrigatório") String name, 
 		@NotBlank(message = "O campo email é obrigatório") String email, 
 		@NotBlank(message = "O campo telefone é obrigatório") String phone, 
