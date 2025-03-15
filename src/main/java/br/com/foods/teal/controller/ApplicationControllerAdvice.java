@@ -14,9 +14,22 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.foods.teal.controller.exception.ApiErrors;
 
+/**
+ * Classe que vai formartar os erros recebido pela aplicação
+ * 
+ * @author Caio Pereira Leal
+ */
 @RestControllerAdvice
 public class ApplicationControllerAdvice {
 
+	/**
+	 * Classe erros em gerais
+	 * 
+	 * @param ex
+	 *        {@link MethodArgumentNotValidException ex}
+	 *        
+	 * @return ApiErros formatando a mensagem de erro
+	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	public ApiErrors handleValidationsErros(MethodArgumentNotValidException ex) {
@@ -26,6 +39,14 @@ public class ApplicationControllerAdvice {
 		return new ApiErrors(messages);
 	}
 
+	/**
+	 *  Classe recebe os erro de status ex: 405 - NOT_FOUND
+	 *  
+	 * @param ex
+	 *        {@link ResponseStatusException ex}
+	 *        
+	 * @return o status com uma mensagem formatada
+	 */
 	@SuppressWarnings("rawtypes")
 	@ExceptionHandler(ResponseStatusException.class)
 	public ResponseEntity handleResponseStatusExeption(ResponseStatusException ex) {
