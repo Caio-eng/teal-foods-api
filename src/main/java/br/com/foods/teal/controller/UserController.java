@@ -12,7 +12,7 @@ import br.com.foods.teal.model.User;
 import br.com.foods.teal.services.UserService;
 
 @RestController
-@RequestMapping(name = "/user")
+@RequestMapping("/user")
 public class UserController {
 
 	@Autowired
