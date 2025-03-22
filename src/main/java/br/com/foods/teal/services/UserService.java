@@ -1,5 +1,6 @@
 package br.com.foods.teal.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,8 +31,8 @@ public class UserService {
 	 */
 	public List<UserDTO> findAllUsers() {
         return repository.findAll().stream()
-                         .map(user -> UserDTO.formModel(user))
-                         .collect(Collectors.toList());
+                         .map( user -> UserDTO.formModel( user ) )
+                         .collect( Collectors.toList() );
     }
 	
 	/**
@@ -43,10 +44,10 @@ public class UserService {
     * @return usuário encontrado ou null se não encontrado
     */
 	public UserDTO findUserById(String id) {
-	    User user = repository.findById(id)
-	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+		User user = repository.findById( id )
+				.orElseThrow( () -> new ResponseStatusException( HttpStatus.NOT_FOUND, "Usuário não encontrado" ) );
 
-	    return UserDTO.formModel(user);
+		return UserDTO.formModel( user );
 	}
 	
 	/**
@@ -57,8 +58,8 @@ public class UserService {
 	 * 
 	 * @return usuário persistido
 	 */
-	public UserDTO save(UserDTO user) {	
-		return UserDTO.formModel( repository.save(new User( user )) );
+	public UserDTO save(UserDTO userDto) {			
+		return UserDTO.formModel( repository.save( new User( userDto ) ) );
 	}
 	
 	/**
@@ -73,11 +74,11 @@ public class UserService {
 	 * @return usuário atualizado
 	 */
 	public UserDTO update(String id, UserDTO userDTO) {
-	    User user = repository.findById(id)
-	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
-	    user = new User( userDTO );
+		User user = repository.findById( id )
+				.orElseThrow( () -> new ResponseStatusException( HttpStatus.NOT_FOUND, "Usuário não encontrado" ) );
+		user.setUpdateDate( LocalDateTime.now() );
 
-	    return UserDTO.formModel(repository.save(user));
+		return UserDTO.formModel( repository.save( user ) );
 	}
 	
 	/**
@@ -87,9 +88,9 @@ public class UserService {
 	 *         identificador do usuário
 	 */
 	public void delete(String id) {
-	    User user = repository.findById(id)
-	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+		User user = repository.findById( id )
+				.orElseThrow( () -> new ResponseStatusException( HttpStatus.NOT_FOUND, "Usuário não encontrado" ) );
 
-	    repository.delete(user);
+		repository.delete( user );
 	}
 }

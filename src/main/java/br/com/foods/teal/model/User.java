@@ -1,6 +1,11 @@
 package br.com.foods.teal.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import br.com.foods.teal.dto.UserDTO;
 import jakarta.persistence.Column;
@@ -15,6 +20,8 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "tb_user")
+@Audited
+@AuditTable(value = "tb_audit_user")
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -26,13 +33,22 @@ public class User implements Serializable {
 	private String name;
 
 	@Column(name = "email")
+	@NotAudited
 	private String email;
 
 	@Column(name = "phone")
+	@NotAudited
 	private String phone;
 
 	@Column(name = "cpf")
+	@NotAudited
 	private String cpf;
+	
+	@Column(name = "create_date")
+	private LocalDateTime createDate;
+	
+	@Column(name = "update_date")
+	private LocalDateTime updateDate;
 
 	/**
 	 * Construtor Vazio
@@ -77,6 +93,8 @@ public class User implements Serializable {
 		this.email = userDTO.email();
 		this.phone = userDTO.phone();
 		this.cpf = userDTO.cpf();
+		this.createDate = LocalDateTime.now();
+		this.updateDate = userDTO.updateDate();
 	}
 
 
@@ -173,6 +191,44 @@ public class User implements Serializable {
 	 */
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+
+	/**
+	 * Retorna a data de criação do usuário
+	 * 
+	 * @return createDate
+	 */
+	public LocalDateTime getCreateDate() {
+		return createDate;
+	}
+
+	/**
+	 * Define a data de criação do usuário
+	 * 
+	 * @param createDate
+	 *         data de criação
+	 */
+	public void setCreateDate(LocalDateTime createDate) {
+		this.createDate = createDate;
+	}
+
+	/**
+	 * Retorna a data de atualização do usuário
+	 * 
+	 * @return updateDate
+	 */
+	public LocalDateTime getUpdateDate() {
+		return updateDate;
+	}
+
+	/**
+	 * Define a data de alteração do usuário
+	 * 
+	 * @param updateDate
+	 *         data de alteração
+	 */
+	public void setUpdateDate(LocalDateTime updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	@Override

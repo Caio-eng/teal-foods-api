@@ -1,5 +1,7 @@
 package br.com.foods.teal.dto;
 
+import java.time.LocalDateTime;
+
 import br.com.foods.teal.model.User;
 import jakarta.validation.constraints.NotBlank;
 
@@ -21,6 +23,12 @@ import jakarta.validation.constraints.NotBlank;
  * @param cpf
  *         cpf do usuário  
  *         
+ * @param createDate
+ *         data de criação do usuário   
+ *         
+ * @param updateDate
+ *         data de atualização do usuário           
+ *         
  * @author Caio Pereira Leal
  */
 public record UserDTO(
@@ -28,7 +36,9 @@ public record UserDTO(
 		@NotBlank(message = "O campo nome é obrigatório") String name, 
 		@NotBlank(message = "O campo email é obrigatório") String email, 
 		@NotBlank(message = "O campo telefone é obrigatório") String phone, 
-		@NotBlank(message = "O campo cpf é obrigatório") String cpf) {
+		@NotBlank(message = "O campo cpf é obrigatório") String cpf,
+		LocalDateTime createDate,
+		LocalDateTime updateDate) {
 
 	
 	/**
@@ -44,6 +54,8 @@ public record UserDTO(
 						 user.getName(), 
 						 user.getEmail(), 
 						 user.getPhone(), 
-						 user.getCpf() );
+						 user.getCpf(),
+						 user.getCreateDate(),
+						 user.getUpdateDate() );
 	}
 }
