@@ -2,10 +2,6 @@ package br.com.foods.teal.model;
 
 import java.io.Serializable;
 
-import org.hibernate.envers.AuditTable;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
-
 import br.com.foods.teal.dto.UserDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,8 +15,6 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "tb_user")
-@Audited
-@AuditTable(value = "tb_audit_user")
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -32,15 +26,12 @@ public class User implements Serializable {
 	private String name;
 
 	@Column(name = "email")
-	@NotAudited
 	private String email;
 
 	@Column(name = "phone")
-	@NotAudited
 	private String phone;
 
 	@Column(name = "cpf")
-	@NotAudited
 	private String cpf;
 
 	/**
