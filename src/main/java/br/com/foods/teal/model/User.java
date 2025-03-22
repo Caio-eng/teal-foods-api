@@ -93,7 +93,7 @@ public class User implements Serializable {
 		this.email = userDTO.email();
 		this.phone = userDTO.phone();
 		this.cpf = userDTO.cpf();
-		this.createDate = LocalDateTime.now();
+		this.createDate = userDTO.createDate();
 		this.updateDate = userDTO.updateDate();
 	}
 

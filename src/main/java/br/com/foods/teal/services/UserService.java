@@ -58,8 +58,10 @@ public class UserService {
 	 * 
 	 * @return usuário persistido
 	 */
-	public UserDTO save(UserDTO userDto) {			
-		return UserDTO.formModel( repository.save( new User( userDto ) ) );
+	public UserDTO save(UserDTO userDto) {	
+		User user = new User( userDto );
+		user.setCreateDate( LocalDateTime.now() );
+		return UserDTO.formModel( repository.save( user ) );
 	}
 	
 	/**
@@ -76,6 +78,10 @@ public class UserService {
 	public UserDTO update(String id, UserDTO userDTO) {
 		User user = repository.findById( id )
 				.orElseThrow( () -> new ResponseStatusException( HttpStatus.NOT_FOUND, "Usuário não encontrado" ) );
+		LocalDateTime createDate = user.getCreateDate();
+		
+		user = new User( userDTO );
+		user.setCreateDate( createDate );
 		user.setUpdateDate( LocalDateTime.now() );
 
 		return UserDTO.formModel( repository.save( user ) );
