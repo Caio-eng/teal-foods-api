@@ -22,7 +22,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 /**
- * Classe para definição de endpont de {@link User}
+ * Classe para definição de endpoint de {@link User}
  * 
  * @author Caio Pereira Leal
  */
@@ -53,7 +53,7 @@ public class UserController {
 	 */
 	@GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
-        return ResponseEntity.ok(service.findUserById(id));
+		return ResponseEntity.ok( service.findUserById( id ) );
     }
 	
 	/**
@@ -90,7 +90,7 @@ public class UserController {
 	@PutMapping("/{id}")
 	@Transactional
     public ResponseEntity<UserDTO> updateUser(@Valid @PathVariable String id, @RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok( service.update(id, userDTO) );
+		return ResponseEntity.ok( service.update( id, userDTO ) );
     }
 	
 	/**
@@ -101,8 +101,8 @@ public class UserController {
 	 */
 	@DeleteMapping("/{id}")
 	@Transactional
-    public ResponseEntity<Void> deleteUser(@Valid @PathVariable String id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+	public ResponseEntity<Void> deleteUser(@Valid @PathVariable String id) {
+		service.delete( id );
+		return ResponseEntity.noContent().build();
+	}
 }

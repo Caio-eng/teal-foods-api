@@ -1,5 +1,6 @@
 package br.com.foods.teal.controller;
 
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,5 +55,11 @@ public class ApplicationControllerAdvice {
 		HttpStatus codeStatus = (HttpStatus) ex.getStatusCode();
 		ApiErrors apiErrors = new ApiErrors(messageError);
 		return new ResponseEntity<>(apiErrors, codeStatus);
+	}
+	
+	@ExceptionHandler(MalformedURLException.class)
+	public ResponseEntity<String> handleMalformedURL(MalformedURLException ex) {
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	            .body("Erro ao processar caminho da imagem");
 	}
 }
