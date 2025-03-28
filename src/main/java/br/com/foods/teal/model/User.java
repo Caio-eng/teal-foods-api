@@ -2,15 +2,19 @@ package br.com.foods.teal.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
 import br.com.foods.teal.dto.UserDTO;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -43,10 +47,14 @@ public class User implements Serializable {
 	@Column(name = "cpf")
 	@NotAudited
 	private String cpf;
-	
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@NotAudited
+	private List<Product> products = new ArrayList<>();
+
 	@Column(name = "create_date")
 	private LocalDateTime createDate;
-	
+
 	@Column(name = "update_date")
 	private LocalDateTime updateDate;
 
@@ -60,19 +68,15 @@ public class User implements Serializable {
 	 * Cria Uma nova instância de usuario
 	 * 
 	 * @param id
-	 *         identificador do usuário
-	 *        
+	 *            identificador do usuário
 	 * @param name
-	 *         nome do usuário
-	 *        
+	 *            nome do usuário
 	 * @param email
-	 *         email do usuário
-	 *         
+	 *            email do usuário
 	 * @param phone
-	 *         telefone do usuário
-	 *         
+	 *            telefone do usuário
 	 * @param cpf
-	 *         cpf do usuário
+	 *            cpf do usuário
 	 */
 	public User(String id, String name, String email, String phone, String cpf) {
 		this.id = id;
@@ -97,7 +101,6 @@ public class User implements Serializable {
 		this.updateDate = userDTO.updateDate();
 	}
 
-
 	/**
 	 * Retorna o identificador do usuário
 	 * 
@@ -111,7 +114,7 @@ public class User implements Serializable {
 	 * Define o identidicador do usuário
 	 * 
 	 * @param id
-	 *         identificador do usuário
+	 *            identificador do usuário
 	 */
 	public void setId(String id) {
 		this.id = id;
@@ -130,7 +133,7 @@ public class User implements Serializable {
 	 * Define o nome do usuário
 	 * 
 	 * @param name
-	 *         nome do usuário
+	 *            nome do usuário
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -149,7 +152,7 @@ public class User implements Serializable {
 	 * Define o email do usuário
 	 * 
 	 * @param email
-	 *         email do usuário
+	 *            email do usuário
 	 */
 	public void setEmail(String email) {
 		this.email = email;
@@ -168,7 +171,7 @@ public class User implements Serializable {
 	 * Define o telefone do usuário
 	 * 
 	 * @param phone
-	 *         telefone do usuário
+	 *            telefone do usuário
 	 */
 	public void setPhone(String phone) {
 		this.phone = phone;
@@ -187,7 +190,7 @@ public class User implements Serializable {
 	 * Define o cpf do usuário
 	 * 
 	 * @param cpf
-	 *         cpf do usuário
+	 *            cpf do usuário
 	 */
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
@@ -206,7 +209,7 @@ public class User implements Serializable {
 	 * Define a data de criação do usuário
 	 * 
 	 * @param createDate
-	 *         data de criação
+	 *            data de criação
 	 */
 	public void setCreateDate(LocalDateTime createDate) {
 		this.createDate = createDate;
@@ -225,10 +228,24 @@ public class User implements Serializable {
 	 * Define a data de alteração do usuário
 	 * 
 	 * @param updateDate
-	 *         data de alteração
+	 *            data de alteração
 	 */
 	public void setUpdateDate(LocalDateTime updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
+	// Método auxiliar para manter a consistência da relação bidirecional
+	public void addProduct(Product product) {
+		products.add( product );
+		product.setUser( this );
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package br.com.foods.teal.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.foods.teal.model.User;
 import jakarta.validation.constraints.NotBlank;
 
@@ -37,8 +39,8 @@ public record UserDTO(
 		@NotBlank(message = "O campo email é obrigatório") String email, 
 		@NotBlank(message = "O campo telefone é obrigatório") String phone, 
 		@NotBlank(message = "O campo cpf é obrigatório") String cpf,
-		LocalDateTime createDate,
-		LocalDateTime updateDate) {
+		@JsonIgnore LocalDateTime createDate,
+		@JsonIgnore LocalDateTime updateDate) {
 
 	
 	/**

@@ -2,20 +2,12 @@ package br.com.foods.teal.controller;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,10 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -56,8 +48,7 @@ public class ProductController {
 	@Autowired
 	private ImageStorageService imageStorageService;
 	
-	@Value("${app.upload.dir:${user.home}}")
-	private String uploadDir;
+	private ObjectMapper mapper = new ObjectMapper();
 	
 	/**
 	 * Lista todos os produtos salvos
@@ -89,28 +80,7 @@ public class ProductController {
      */
 	@GetMapping("/images/{filename:.+}")
 	public ResponseEntity<Resource> getImage(@PathVariable String filename) {
-	    try {
-	        Path uploadPath = Paths.get(uploadDir).resolve("product-images");
-	        Path filePath = uploadPath.resolve(filename).normalize();
-	        
-	        System.out.println("Procurando imagem em: " + filePath.toString());
-	        
-	        Resource resource = new UrlResource(filePath.toUri());
-	        
-	        if (resource.exists() && resource.isReadable()) {
-	            String contentType = Files.probeContentType(filePath);
-	            System.out.println("Content-Type detectado: " + contentType);
-	            return ResponseEntity.ok()
-	                    .header(HttpHeaders.CONTENT_TYPE, contentType)
-	                    .body(resource);
-	        } else {
-	            System.out.println("Arquivo não encontrado ou não legível");
-	            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Imagem não encontrada: " + filename);
-	        }
-	    } catch (IOException e) {
-	        System.out.println("Erro ao acessar arquivo: " + e.getMessage());
-	        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao carregar imagem: " + filename);
-	    }
+	    return service.getImage( filename );
 	}
 	
 	/**
@@ -123,13 +93,7 @@ public class ProductController {
 	 */
 	@GetMapping("/check-images")
 	public ResponseEntity<List<String>> listImages() throws IOException {
-	    Path uploadPath = Paths.get(uploadDir).resolve("product-images");
-	    List<String> files = Files.list(uploadPath)
-	            .map(Path::getFileName)
-	            .map(Path::toString)
-	            .collect(Collectors.toList());
-	    
-	    return ResponseEntity.ok(files);
+	    return ResponseEntity.ok( service.listImages() );
 	}
 
     /**
@@ -141,7 +105,20 @@ public class ProductController {
     public ResponseEntity<List<String>> getProductImages(@PathVariable Long id) {
         ProductDTO product = service.findProductById(id);
         
-        return ResponseEntity.ok(product.images());
+        return ResponseEntity.ok( product.images() );
+    }
+    
+    /**
+	 * Lista de Produtos por usuário
+	 * 
+	 * @param userId
+	 * 			identificador do usuário
+	 * 
+	 * @return user
+	 */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ProductDTO>> getProductsByUser(@PathVariable String userId) {
+    	return ResponseEntity.ok( service.getProductsByUser( userId ) );
     }
 
 	/**
@@ -155,21 +132,21 @@ public class ProductController {
 	 * @param images
 	 * 			imagens do produto
 	 * 
+	 * @param userId
+	 * 			identificador do usuário
+	 * 
 	 * @return produto persistido
 	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Transactional
 	public ResponseEntity<ProductDTO> createProduct(@RequestPart("product") String productJson,
             @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            @RequestParam String userId,
             UriComponentsBuilder uriBuilder,
             HttpServletRequest request) throws JsonProcessingException {
         
-        // Converte o JSON string para DTO
-        ObjectMapper mapper = new ObjectMapper();
-        ProductDTO productDTO = mapper.readValue(productJson, ProductDTO.class);
-        
-        // Processa imagens
-        List<String> imageUrls = processImages(images);
+		ProductDTO productDTO = mapper.readValue( productJson, ProductDTO.class );
+		List<String> imageUrls = processImages( images );
         
         ProductDTO savedProduct = service.save(
             new ProductDTO(
@@ -179,20 +156,21 @@ public class ProductController {
                 productDTO.description(),
                 productDTO.quantity(),
                 imageUrls,
+                userId,
                 LocalDateTime.now(),
                 productDTO.updateDate()
             )
         );
         
-        URI uri = uriBuilder.path("/products/{id}").buildAndExpand(savedProduct.id()).toUri();
-        return ResponseEntity.created(uri).body(savedProduct);
+        URI uri = uriBuilder.path( "/products/{id}" ).buildAndExpand( savedProduct.id() ).toUri();
+        return ResponseEntity.created( uri ).body( savedProduct );
     }
 
     private List<String> processImages(List<MultipartFile> images) {
-        if (images == null || images.isEmpty()) {
+        if ( images == null || images.isEmpty() ) {
             return Collections.emptyList();
         }
-        return imageStorageService.storeImages(images);
+        return imageStorageService.storeImages( images );
     }
 	
 	/**
@@ -206,6 +184,9 @@ public class ProductController {
 	 *           
 	 * @param images
 	 * 			imagens do produto
+	 * 
+	 * @param userId
+	 * 			identificador do usuário
 	 *           
 	 * @return produto atualizado
 	 */
@@ -215,12 +196,12 @@ public class ProductController {
 	        @PathVariable Long id,
 	        @RequestPart("product") String productJson,
 	        @RequestPart(value = "images", required = false) List<MultipartFile> images,
+	        @RequestParam String userId,
 	        UriComponentsBuilder uriBuilder) throws JsonProcessingException {
 	    
-	    ObjectMapper mapper = new ObjectMapper();
-	    ProductDTO productDTO = mapper.readValue(productJson, ProductDTO.class);
+	    ProductDTO productDTO = mapper.readValue( productJson, ProductDTO.class );
 	    
-	    List<String> imageUrls = processImages(images);
+	    List<String> imageUrls = processImages( images );
 	    
 	    ProductDTO updatedProduct = service.update(
 	        id,
@@ -231,12 +212,13 @@ public class ProductController {
 	            productDTO.description(),
 	            productDTO.quantity(),
 	            imageUrls,
-	            productDTO.createDate(), // Mantém a data original
-	            LocalDateTime.now()     // Atualiza a data de modificação
+	            userId,
+	            productDTO.createDate(),
+	            LocalDateTime.now()
 	        )
 	    );
 	    
-	    return ResponseEntity.ok(updatedProduct);
+	    return ResponseEntity.ok( updatedProduct );
 	}
 	
 	/**

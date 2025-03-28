@@ -1,5 +1,6 @@
 package br.com.foods.teal.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +29,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	 * 			descrição do produto
 	 */
 	Optional<Product> findByDescriptionIgnoreCase(String description);
+	
+	/**
+	 * Lista de Produtos por usuário
+	 * 
+	 * @param userId
+	 * 			identificador do usuário
+	 */
+	 List<Product> findByUserId(String userId);
 }

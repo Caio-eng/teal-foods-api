@@ -19,6 +19,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -55,6 +56,10 @@ public class Product implements Serializable {
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image_url")
     private List<String> images = new ArrayList<>();
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "create_date")
     private LocalDateTime createDate;
@@ -73,13 +78,15 @@ public class Product implements Serializable {
     * @param categories Lista de categorias (para frontend)
     * @param description Descrição do produto
     * @param quantity Quantidade disponível
+    * @param user usuário
     */
-    public Product(String name, Category category, String description, Integer quantity, List<String> images) {
+    public Product(String name, Category category, String description, Integer quantity, List<String> images, User user) {
         this.name = name;
         this.category = category;
         this.description = description;
         this.quantity = quantity;
         this.images = images;
+        this.user = user;
     }
 
     /**
@@ -162,6 +169,14 @@ public class Product implements Serializable {
 
 	public void setImages(List<String> images) {
 		this.images = images;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override

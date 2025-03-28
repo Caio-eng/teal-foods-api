@@ -3,6 +3,8 @@ package br.com.foods.teal.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.foods.teal.model.Product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +21,7 @@ import jakarta.validation.constraints.PositiveOrZero;
  * @param image Imagem do produto
  * @param createDate Data de criação
  * @param updateDate Data de atualização
+ * @param userId identidicador do usuário
  * 
  * @author Caio Pereira Leal
  */
@@ -29,8 +32,9 @@ public record ProductDTO(
         String description,
         @NotNull @PositiveOrZero(message = "A quantidade não pode ser negativa") Integer quantity,
         @NotBlank(message = "Pelo menos uma imagem deve ser fornecida") List<String> images,
-        LocalDateTime createDate,
-        LocalDateTime updateDate) {
+        String userId,
+        @JsonIgnore LocalDateTime createDate,
+        @JsonIgnore  LocalDateTime updateDate) {
 
     /**
      * Retorna uma instância preenchida de ProductDTO a partir de um Product
@@ -46,6 +50,7 @@ public record ProductDTO(
                 product.getDescription(),
                 product.getQuantity(),
                 product.getImages(),
+                product.getUser().getId(),
                 product.getCreateDate(),
                 product.getUpdateDate());
     }
