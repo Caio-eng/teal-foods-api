@@ -29,6 +29,7 @@ import br.com.foods.teal.dto.ProductDTO;
 import br.com.foods.teal.model.Product;
 import br.com.foods.teal.services.ImageStorageService;
 import br.com.foods.teal.services.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -56,6 +57,7 @@ public class ProductController {
 	 * @return todos produtos
 	 */
 	@GetMapping
+	@Operation(summary = "Rota busca todos os produtos")
 	public ResponseEntity<List<ProductDTO>> getAllProducts() {
 		return ResponseEntity.ok( service.findAllProducts() );
 	}
@@ -69,6 +71,7 @@ public class ProductController {
 	 * @return produto
 	 */
 	@GetMapping("/{id}")
+	@Operation(summary = "Rota responsável por buscar o produto pelo identificador")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
 		return ResponseEntity.ok( service.findProductById( id ) );
     }
@@ -79,6 +82,7 @@ public class ProductController {
      * @return Imagem como Resource
      */
 	@GetMapping("/images/{filename:.+}")
+	@Operation(summary = "Rota vê a imagem")
 	public ResponseEntity<Resource> getImage(@PathVariable String filename) {
 	    return service.getImage( filename );
 	}
@@ -92,6 +96,7 @@ public class ProductController {
 	 * 				Exceção para erro
 	 */
 	@GetMapping("/check-images")
+	@Operation(summary = "Rota checa as imagens")
 	public ResponseEntity<List<String>> listImages() throws IOException {
 	    return ResponseEntity.ok( service.listImages() );
 	}
@@ -102,6 +107,7 @@ public class ProductController {
      * @return Lista de URLs das imagens
      */
     @GetMapping("/{id}/images")
+    @Operation(summary = "Rota buscar imagens do produto")
     public ResponseEntity<List<String>> getProductImages(@PathVariable Long id) {
         ProductDTO product = service.findProductById(id);
         
@@ -117,6 +123,7 @@ public class ProductController {
 	 * @return user
 	 */
     @GetMapping("/user/{userId}")
+    @Operation(summary = "Rota buscar o produto pelo usuário")
     public ResponseEntity<List<ProductDTO>> getProductsByUser(@PathVariable String userId) {
     	return ResponseEntity.ok( service.getProductsByUser( userId ) );
     }
@@ -139,6 +146,7 @@ public class ProductController {
 	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Transactional
+	@Operation(summary = "Rota responsável por criar um produto")
 	public ResponseEntity<ProductDTO> createProduct(@RequestPart("product") String productJson,
             @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @RequestParam String userId,
@@ -192,6 +200,7 @@ public class ProductController {
 	 */
 	@PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Transactional
+	@Operation(summary = "Rota responsável por atualizar o produto com a imagem")
 	public ResponseEntity<ProductDTO> updateProductWithImages(
 	        @PathVariable Long id,
 	        @RequestPart("product") String productJson,
@@ -229,6 +238,7 @@ public class ProductController {
 	 */
 	@DeleteMapping("/{id}")
 	@Transactional
+	@Operation(summary = "Rota responsável por deletar o produto")
 	public ResponseEntity<Void> deleteProduct(@Valid @PathVariable Long id) {
 		service.delete( id );
 		return ResponseEntity.noContent().build();

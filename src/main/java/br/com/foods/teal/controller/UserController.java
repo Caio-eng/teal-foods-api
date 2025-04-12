@@ -18,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.foods.teal.dto.UserDTO;
 import br.com.foods.teal.model.User;
 import br.com.foods.teal.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -39,6 +40,7 @@ public class UserController {
 	 * @return todos usuários
 	 */
 	@GetMapping
+	@Operation(summary = "Rota responsável por buscar todos usuário")
 	public ResponseEntity<List<UserDTO>> getAllUsers() {
 		return ResponseEntity.ok( service.findAllUsers() );
 	}
@@ -52,6 +54,7 @@ public class UserController {
 	 * @return usuário
 	 */
 	@GetMapping("/{id}")
+	@Operation(summary = "Rota responsável por buscar o usuário pelo identificador")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
 		return ResponseEntity.ok( service.findUserById( id ) );
     }
@@ -68,6 +71,7 @@ public class UserController {
 	 */
 	@PostMapping
 	@Transactional
+	@Operation(summary = "Rota responsável por criar o usuário")
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO user, UriComponentsBuilder urBuilder) {
         UserDTO userPersitido = service.save( user );
         
@@ -89,6 +93,7 @@ public class UserController {
 	 */
 	@PutMapping("/{id}")
 	@Transactional
+	@Operation(summary = "Rota responsável por atualizar o usuário")
     public ResponseEntity<UserDTO> updateUser(@Valid @PathVariable String id, @RequestBody UserDTO userDTO) {
 		return ResponseEntity.ok( service.update( id, userDTO ) );
     }
@@ -101,6 +106,7 @@ public class UserController {
 	 */
 	@DeleteMapping("/{id}")
 	@Transactional
+	@Operation(summary = "Rota responsável por deletar o usuário")
 	public ResponseEntity<Void> deleteUser(@Valid @PathVariable String id) {
 		service.delete( id );
 		return ResponseEntity.noContent().build();

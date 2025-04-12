@@ -38,8 +38,14 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**").permitAll() 
-                .requestMatchers("/products/images/**").permitAll()
+                .requestMatchers(
+                		"/h2-console/**",
+                		"/products/images/**",
+                		"/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/v3/api-docs",
+                        "/v3/api-docs/**"
+                		).permitAll() 
                 .anyRequest().permitAll())  
             .headers(headers -> 
                 headers
