@@ -18,6 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import br.com.foods.teal.repository.UserRepository;
+
 /**
  * Classe para teste de integração do usuário
  * 
@@ -30,6 +32,8 @@ public class UserIntegrationTest {
 
 	@Autowired
     private MockMvc mockMvc;
+	@Autowired
+	private UserRepository userRepository;
 
 	/**
 	 * Classe incia antes dos testes e deixa um usúario registrado
@@ -38,6 +42,7 @@ public class UserIntegrationTest {
 	 */
     @BeforeEach
     void setUp() throws Exception {
+    	userRepository.deleteAll();
         String json = """
             {
                 "id": "1",
@@ -102,10 +107,10 @@ public class UserIntegrationTest {
         String json = """
             {
                 "id": "1",
-                "name": "Teste",
-                "email": "teste@email.com",
-                "phone": "123456789",
-                "cpf": "12345678900"
+                "name": "Test",
+                "email": "test@email.com",
+                "phone": "123456788",
+                "cpf": "12345678901"
             }
         """;
 
