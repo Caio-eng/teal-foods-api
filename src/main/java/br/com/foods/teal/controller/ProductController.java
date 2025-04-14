@@ -164,6 +164,7 @@ public class ProductController {
                 productDTO.description(),
                 productDTO.quantity(),
                 imageUrls,
+                productDTO.price(),
                 userId,
                 LocalDateTime.now(),
                 productDTO.updateDate()
@@ -221,6 +222,7 @@ public class ProductController {
 	            productDTO.description(),
 	            productDTO.quantity(),
 	            imageUrls,
+	            productDTO.price(),
 	            userId,
 	            productDTO.createDate(),
 	            LocalDateTime.now()

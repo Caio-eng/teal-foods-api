@@ -52,6 +52,9 @@ public class Product implements Serializable {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
     
+    @Column(nullable = false)
+    private Double price;
+    
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image_url")
@@ -77,15 +80,17 @@ public class Product implements Serializable {
     * @param name Nome do produto
     * @param categories Lista de categorias (para frontend)
     * @param description Descrição do produto
-    * @param quantity Quantidade disponível
+    * @param quantity Quantidade do produto
+    * @param price preço do produto
     * @param user usuário
     */
-    public Product(String name, Category category, String description, Integer quantity, List<String> images, User user) {
+    public Product(String name, Category category, String description, Integer quantity, Double price, List<String> images, User user) {
         this.name = name;
         this.category = category;
         this.description = description;
         this.quantity = quantity;
         this.images = images;
+        this.price = price;
         this.user = user;
     }
 
@@ -103,6 +108,7 @@ public class Product implements Serializable {
         this.description = productDTO.description();
         this.quantity = productDTO.quantity();
         this.images = productDTO.images();
+        this.price = productDTO.price();
         this.createDate = productDTO.createDate();
         this.updateDate = productDTO.updateDate();
     }
@@ -162,6 +168,14 @@ public class Product implements Serializable {
     public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
 
 	public List<String> getImages() {
 		return images;

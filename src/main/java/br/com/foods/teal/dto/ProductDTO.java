@@ -18,6 +18,7 @@ import jakarta.validation.constraints.PositiveOrZero;
  * @param categories Lista de categorias (para frontend)
  * @param description Descrição do produto
  * @param quantity Quantidade disponível
+ * @param price preço do produto
  * @param image Imagem do produto
  * @param createDate Data de criação
  * @param updateDate Data de atualização
@@ -32,6 +33,7 @@ public record ProductDTO(
         String description,
         @NotNull @PositiveOrZero(message = "A quantidade não pode ser negativa") Integer quantity,
         @NotBlank(message = "Pelo menos uma imagem deve ser fornecida") List<String> images,
+        @NotNull @PositiveOrZero(message = "O valor não pode ser negativo") Double price,
         String userId,
         @JsonIgnore LocalDateTime createDate,
         @JsonIgnore  LocalDateTime updateDate) {
@@ -50,6 +52,7 @@ public record ProductDTO(
                 product.getDescription(),
                 product.getQuantity(),
                 product.getImages(),
+                product.getPrice(),
                 product.getUser().getId(),
                 product.getCreateDate(),
                 product.getUpdateDate());
