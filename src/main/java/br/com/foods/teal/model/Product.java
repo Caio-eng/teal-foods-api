@@ -55,6 +55,9 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private Double price;
     
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+    
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image_url")
@@ -82,15 +85,17 @@ public class Product implements Serializable {
     * @param description Descrição do produto
     * @param unit Unidade do produto
     * @param price preço do produto
+    * @param quantity Quantidade do produto
     * @param user usuário
     */
-    public Product(String name, Category category, String description, String unit, Double price, List<String> images, User user) {
+    public Product(String name, Category category, String description, String unit, Double price, List<String> images, Integer quantity, User user) {
         this.name = name;
         this.category = category;
         this.description = description;
         this.unit = unit;
         this.images = images;
         this.price = price;
+        this.quantity = quantity;
         this.user = user;
     }
 
@@ -109,6 +114,7 @@ public class Product implements Serializable {
         this.unit = productDTO.unit();
         this.images = productDTO.images();
         this.price = productDTO.price();
+        this.quantity = productDTO.quantity();
         this.createDate = productDTO.createDate();
         this.updateDate = productDTO.updateDate();
     }
@@ -151,6 +157,14 @@ public class Product implements Serializable {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+    
+    public Integer getQuantity() {
+        return quantity;
+    }
+    
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public LocalDateTime getCreateDate() {
@@ -196,6 +210,6 @@ public class Product implements Serializable {
 	@Override
     public String toString() {
         return "Product [id=" + id + ", name=" + name + ", category=" + category + ", description=" + description
-                + ", quantity=" + unit + "]";
+                + ", unit=" + unit + ", quantity=" + quantity + "]";
     }
 }
