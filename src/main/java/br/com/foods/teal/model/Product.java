@@ -49,8 +49,8 @@ public class Product implements Serializable {
     @Column(name = "description", length = 500)
     private String description;
 
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    @Column(name = "unit", nullable = false)
+    private String unit;
     
     @Column(nullable = false)
     private Double price;
@@ -80,15 +80,15 @@ public class Product implements Serializable {
     * @param name Nome do produto
     * @param categories Lista de categorias (para frontend)
     * @param description Descrição do produto
-    * @param quantity Quantidade do produto
+    * @param unit Unidade do produto
     * @param price preço do produto
     * @param user usuário
     */
-    public Product(String name, Category category, String description, Integer quantity, Double price, List<String> images, User user) {
+    public Product(String name, Category category, String description, String unit, Double price, List<String> images, User user) {
         this.name = name;
         this.category = category;
         this.description = description;
-        this.quantity = quantity;
+        this.unit = unit;
         this.images = images;
         this.price = price;
         this.user = user;
@@ -106,7 +106,7 @@ public class Product implements Serializable {
         this.name = productDTO.name();
         this.category = Category.fromString(productDTO.categories());
         this.description = productDTO.description();
-        this.quantity = productDTO.quantity();
+        this.unit = productDTO.unit();
         this.images = productDTO.images();
         this.price = productDTO.price();
         this.createDate = productDTO.createDate();
@@ -145,12 +145,12 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public String getUnit() {
+        return unit;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public LocalDateTime getCreateDate() {
@@ -196,6 +196,6 @@ public class Product implements Serializable {
 	@Override
     public String toString() {
         return "Product [id=" + id + ", name=" + name + ", category=" + category + ", description=" + description
-                + ", quantity=" + quantity + "]";
+                + ", quantity=" + unit + "]";
     }
 }

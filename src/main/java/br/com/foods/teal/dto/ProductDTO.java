@@ -17,7 +17,7 @@ import jakarta.validation.constraints.PositiveOrZero;
  * @param name Nome do produto
  * @param categories Lista de categorias (para frontend)
  * @param description Descrição do produto
- * @param quantity Quantidade disponível
+ * @param unit Unidade disponível
  * @param price preço do produto
  * @param image Imagem do produto
  * @param createDate Data de criação
@@ -31,7 +31,7 @@ public record ProductDTO(
         @NotBlank(message = "O campo nome é obrigatório") String name,
         @NotBlank(message = "O campo categoria é obrigatório") String categories,
         String description,
-        @NotNull @PositiveOrZero(message = "A quantidade não pode ser negativa") Integer quantity,
+        @NotBlank(message = "O campo unidade é obrigatório") String unit,
         @NotBlank(message = "Pelo menos uma imagem deve ser fornecida") List<String> images,
         @NotNull @PositiveOrZero(message = "O valor não pode ser negativo") Double price,
         String userId,
@@ -50,7 +50,7 @@ public record ProductDTO(
                 product.getName(),
                 product.getCategory().toString(),
                 product.getDescription(),
-                product.getQuantity(),
+                product.getUnit(),
                 product.getImages(),
                 product.getPrice(),
                 product.getUser().getId(),
